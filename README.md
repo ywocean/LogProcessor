@@ -23,7 +23,7 @@ E.g.
 	response_size
 	request_duration
 
-This application supports dynamic log format based on Apache's Common log format. Thus request_method, request_path and protocol_version would be wrapped within the same double quotes, e.g. "GET /home.html HTTP/1.1".
+This application supports dynamic log format based on Apache's log format. Thus request_method, request_path and protocol_version would be wrapped within the same double quotes, e.g. "GET /home.html HTTP/1.1".
 
 Sample log line:
 
