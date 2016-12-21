@@ -1,0 +1,17 @@
+[
+	{
+		"name" : "url_stats",
+		"keys": ["request_path", "status_code"],
+		"metrics": ["hits"]
+	},
+	{
+		"name": "useragent_stats",
+		"keys": ["request_path", "user_agent"],
+		"metrics": ["hits", "success_hits", "failed_hits", "request_duration"]
+	},
+	{
+		"name": "user_stats",
+		"keys": ["ip_addr", "user_name"],
+		"metrics": ["success_hits", "failed_hits"]
+	}
+]
