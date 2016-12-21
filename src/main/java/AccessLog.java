@@ -5,19 +5,13 @@ import java.util.regex.Pattern;
 public class AccessLog {
 	private HashMap<String, Object> data;
 	
-	public AccessLog(String ipAddress, String userName, String timestamp, String requestMethod, String requestPath,
-			String protocolVersion, String userAgent, String statusCode, String responseSize, String requestTime) {
+	public AccessLog(String[] logFormat, Matcher m) {
+		
 		data = new HashMap<String, Object>();
-		data.put("ip_addr", ipAddress);
-		data.put("user_name", userName);
-		data.put("timestamp", timestamp);
-		data.put("request_method", requestMethod);
-		data.put("request_path", requestPath);
-		data.put("protocol_version", protocolVersion);
-		data.put("user_agent", userAgent);
-		data.put("status_code", statusCode);
-		data.put("response_size", responseSize);
-		data.put("request_duration", requestTime);
+		int index = 1;
+		for(String format : logFormat) {
+			data.put(format, m.group(index++));
+		}
 	}
 	
 	public Object getValue(String key) {
@@ -37,7 +31,6 @@ public class AccessLog {
 		boolean requestMethodQuoteEnded = false;
 		String prefix = "^";
 		for(String format : logFormat) {
-			// ip_addr,user_name,timestamp,request_method,request_path,protocol_version,user_agent,status_code,response_size,request_duration
 			if(format.equals("request_method")
 					|| format.equals("request_path")
 					|| format.equals("protocol_version")){
@@ -73,14 +66,13 @@ public class AccessLog {
 		PATTERN = Pattern.compile(LOG_ENTRY_PATTERN);
 	}
 
-	public static AccessLog parseLogLine(String log) {
+	public static AccessLog parseLogLine(String[] logFormat, String log) {
 		Matcher m = PATTERN.matcher(log);
 		if (!m.find()) {
 			System.out.println("Cannot parse log: " + log);
 			throw new RuntimeException("Error parsing logline");
 		}
 
-		return new AccessLog(m.group(1), m.group(2), m.group(3), m.group(4), m.group(5), m.group(6), m.group(7),
-				m.group(8), m.group(9), m.group(10));
+		return new AccessLog(logFormat, m);
 	}
 }

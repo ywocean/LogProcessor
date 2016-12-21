@@ -24,7 +24,7 @@ public class LogProcessor {
 	public void run(String accessLogFilename, String logFormat, String schemaJsonFilename) throws IOException, ParseException {
 
 		List<Schema> schemas = getSchemas(schemaJsonFilename);
-		processAccessLog(accessLogFilename, logFormat, schemas);
+		processAccessLog(accessLogFilename, logFormat.split(","), schemas);
 		
 	}
 	
@@ -106,8 +106,8 @@ public class LogProcessor {
 		fw.close();
 	}
 	
-	private void processAccessLog(String accessLogFilename, String logFormat, List<Schema> schemas) throws IOException {
-		AccessLog.constructLogEntryPattern(logFormat.split(","));
+	private void processAccessLog(String accessLogFilename, String[] logFormat, List<Schema> schemas) throws IOException {
+		AccessLog.constructLogEntryPattern(logFormat);
 		
 		HashMap<String, HashMap<String, int[]>> aggregatedDataForAllSchemas = new HashMap<String, HashMap<String, int[]>>();
 		for(Schema schema : schemas) {
@@ -120,7 +120,7 @@ public class LogProcessor {
 		String line;
 
 		while ((line = br.readLine()) != null) {
-			AccessLog accessLog = AccessLog.parseLogLine(line);
+			AccessLog accessLog = AccessLog.parseLogLine(logFormat, line);
 			for(Schema schema : schemas) {
 				aggregate((HashMap<String, int[]>)aggregatedDataForAllSchemas.get(schema.getName()), schema, accessLog);
 			}
