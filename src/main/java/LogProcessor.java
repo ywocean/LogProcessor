@@ -21,13 +21,13 @@ import org.json.simple.parser.ParseException;
 
 public class LogProcessor {
 
-	public void run(String accessLogFilename, String schemaJsonFilename) throws IOException, ParseException {
+	public void run(String accessLogFilename, String logFormat, String schemaJsonFilename) throws IOException, ParseException {
 
 		List<Schema> schemas = getSchemas(schemaJsonFilename);
-		processAccessLog(accessLogFilename, schemas);
+		processAccessLog(accessLogFilename, logFormat, schemas);
 		
 	}
-
+	
 	private List<Schema> getSchemas(String schemaJsonFilename)
 			throws FileNotFoundException, IOException, ParseException {
 		List<Schema> schemas = new ArrayList<Schema>();
@@ -106,7 +106,9 @@ public class LogProcessor {
 		fw.close();
 	}
 	
-	private void processAccessLog(String accessLogFilename, List<Schema> schemas) throws IOException {
+	private void processAccessLog(String accessLogFilename, String logFormat, List<Schema> schemas) throws IOException {
+		AccessLog.constructLogEntryPattern(logFormat.split(","));
+		
 		HashMap<String, HashMap<String, int[]>> aggregatedDataForAllSchemas = new HashMap<String, HashMap<String, int[]>>();
 		for(Schema schema : schemas) {
 			aggregatedDataForAllSchemas.put(schema.getName(), new HashMap<String, int[]>());
@@ -133,14 +135,15 @@ public class LogProcessor {
 
 	public static void main(final String[] args) throws Exception {
 
-		if (args.length < 2) {
-			System.out.println("Please pass in access log filename and schema configuration file.");
+		if (args.length < 3) {
+			System.out.println("Please pass in access log filename, schema configuration file and log format.");
 			return;
 		}
 
 		String accessLogFilename = args[0];
 		String schemaJsonFilename = args[1];
+		String logFormat = args[2]; //ip_addr,user_name,timestamp,request_method,request_path,protocol_version,user_agent,status_code,response_size,request_duration
 
-		new LogProcessor().run(accessLogFilename, schemaJsonFilename);
+		new LogProcessor().run(accessLogFilename, logFormat, schemaJsonFilename);
 	}
 }
