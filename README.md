@@ -1,8 +1,8 @@
-# Access Log Parser
+# Log Parser
 
 This program will read a log file with the given log file format as shown below, as well as a json file listing schemas that define the aggregation of the metrics by dimensions. It will parse the log file based on the format and output the aggregated data to the <schema name>.tsv based each schema's definition.
 
-## Access log format
+## Log format
 
 	<ip_addr> <user_name> <timestamp> <request_method> <request_path> <protocol_version> <user_agent> <status_code> <response_size> <request_time>
 
