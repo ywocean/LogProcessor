@@ -81,6 +81,8 @@ public class LogProcessor {
 					metricValues[i] ++;
 				}
 			}
+			else
+				System.out.println("Invalid metric: " + metric);
 		}
 	}
 	
